@@ -1,65 +1,180 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+/**
+ * Dashboard Page
+ * Overview of personas, conversations, and quick actions
+ */
+
+import Link from 'next/link';
+import {
+  MessageSquare,
+  Users,
+  Mic,
+  ArrowRight,
+  Bot,
+  Sparkles,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useChatStore, usePersonaStore, useVoiceStore } from '@/stores';
+import { PERSONA_TEMPLATES } from '@/lib/persona';
+
+export default function DashboardPage() {
+  const conversations = useChatStore((s) => s.conversations);
+  const personas = usePersonaStore((s) => s.personas);
+  const voices = useVoiceStore((s) => s.voices);
+
+  const stats = [
+    {
+      title: 'Conversations',
+      value: conversations.length,
+      icon: MessageSquare,
+      href: '/chat',
+    },
+    {
+      title: 'Personas',
+      value: personas.length,
+      icon: Users,
+      href: '/personas',
+    },
+    {
+      title: 'Voices',
+      value: voices.length,
+      icon: Mic,
+      href: '/voices',
+    },
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="p-8 space-y-8 overflow-y-auto h-full">
+      <div>
+        <h1 className="text-3xl font-bold">Welcome to AI Voice Platform</h1>
+        <p className="text-muted-foreground mt-2">
+          Create AI personas with custom voices and chat with them using multiple LLM providers.
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid gap-4 md:grid-cols-3">
+        {stats.map((stat) => (
+          <Link key={stat.title} href={stat.href}>
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  {stat.title}
+                </CardTitle>
+                <stat.icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stat.value}</div>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bot className="h-5 w-5" />
+              Start Chatting
+            </CardTitle>
+            <CardDescription>
+              Begin a conversation with an AI persona
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link href="/chat">
+              <Button className="w-full">
+                New Conversation
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5" />
+              Create Persona
+            </CardTitle>
+            <CardDescription>
+              Build a custom AI personality with voice
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link href="/personas/new">
+              <Button variant="outline" className="w-full">
+                Create New Persona
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Templates */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Quick Start Templates</h2>
+        <div className="grid gap-4 md:grid-cols-3">
+          {PERSONA_TEMPLATES.slice(0, 3).map((template) => (
+            <Card key={template.templateId} className="hover:shadow-md transition-shadow">
+              <CardHeader>
+                <CardTitle className="text-base">{template.name}</CardTitle>
+                <CardDescription className="line-clamp-2">
+                  {template.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-1">
+                  {template.personality.traits.slice(0, 3).map((trait) => (
+                    <span
+                      key={trait}
+                      className="text-xs bg-secondary px-2 py-1 rounded"
+                    >
+                      {trait}
+                    </span>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+
+      {/* Features */}
+      <div className="border-t pt-8">
+        <h2 className="text-xl font-semibold mb-4">Platform Features</h2>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="p-4 rounded-lg bg-muted/50">
+            <h3 className="font-medium">Multi-Provider LLM</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Anthropic Claude, OpenAI GPT, and local Ollama models
+            </p>
+          </div>
+          <div className="p-4 rounded-lg bg-muted/50">
+            <h3 className="font-medium">Voice Cloning</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Clone any voice with ElevenLabs integration
+            </p>
+          </div>
+          <div className="p-4 rounded-lg bg-muted/50">
+            <h3 className="font-medium">Persona System</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Customize personality, tone, and behavior
+            </p>
+          </div>
+          <div className="p-4 rounded-lg bg-muted/50">
+            <h3 className="font-medium">Multiple Modes</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Assistant, content, developer, and support modes
+            </p>
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
