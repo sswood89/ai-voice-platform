@@ -1,36 +1,162 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Voice Platform
+
+A Next.js LLM playground with persona-based conversations, multi-provider support, and long-term memory.
+
+## Features
+
+- **Multi-Provider LLM Support** - Anthropic Claude, OpenAI GPT, and Ollama (local)
+- **Persona System** - Create custom AI personas with unique personalities, voices, and behaviors
+- **Long-Term Memory** - Automatic conversation summarization and context injection
+- **Voice Integration** - Text-to-speech with ElevenLabs and voice cloning
+- **Auto-Fallback** - Automatically uses Ollama if no cloud API keys configured
+
+## Tech Stack
+
+- **Framework**: Next.js 16, React 19, TypeScript 5
+- **State**: Zustand with localStorage persistence
+- **UI**: Tailwind CSS 4, Shadcn components
+- **LLM**: Anthropic SDK, OpenAI SDK, Ollama
+- **Voice**: ElevenLabs API
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- pnpm (recommended) or npm
+- Ollama (for local LLM) - [Install Ollama](https://ollama.ai)
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Clone the repository
+git clone https://github.com/sswood89/ai-voice-platform.git
+cd ai-voice-platform
+
+# Install dependencies
+pnpm install
+
+# Copy environment variables
+cp .env.example .env.local
+
+# Start the development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+# LLM Providers (at least one required)
+ANTHROPIC_API_KEY=     # For Claude models
+OPENAI_API_KEY=        # For GPT models
+OLLAMA_BASE_URL=http://localhost:11434  # For local Ollama
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Voice (optional)
+ELEVENLABS_API_KEY=    # For TTS and voice cloning
+```
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Create a Persona
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Navigate to `/personas/new` and configure:
+- **Basic Info**: Name, description, avatar
+- **Personality**: Traits, tone, communication style
+- **Knowledge**: Domain expertise, context
+- **Behavior**: Response length, emoji usage, mode
+- **Voice**: Select or clone a voice
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Start Chatting
 
-## Deploy on Vercel
+Go to `/chat`, select your persona, and start a conversation. The system will:
+- Stream responses in real-time
+- Optionally generate voice audio
+- Automatically summarize old messages into memories
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Long-Term Memory
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+After 35+ messages in a conversation:
+- Older messages are summarized by the LLM
+- Summaries stored per-persona in localStorage
+- Relevant memories injected into future conversations
+- Visual indicator shows active memories
+
+## Project Structure
+
+```
+ai-voice-platform/
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   │   ├── chat/         # LLM streaming endpoint
+│   │   ├── memory/       # Summarization endpoint
+│   │   ├── tts/          # Text-to-speech
+│   │   └── voices/       # Voice management
+│   ├── chat/             # Chat page
+│   ├── personas/         # Persona management
+│   ├── settings/         # Configuration
+│   └── voices/           # Voice library
+├── components/            # React components
+│   ├── chat/             # Chat UI
+│   ├── persona/          # Persona editors
+│   ├── layout/           # Navigation
+│   └── ui/               # Shadcn components
+├── lib/                   # Business logic
+│   ├── llm/              # LLM provider abstraction
+│   ├── memory/           # Memory system
+│   ├── persona/          # Prompt building
+│   └── voice/            # TTS engine
+├── stores/               # Zustand state
+└── types/                # TypeScript definitions
+```
+
+## Memory System
+
+The memory system provides context continuity across conversations:
+
+| Config | Default | Description |
+|--------|---------|-------------|
+| `triggerMessageCount` | 15 | Messages before summarization triggers |
+| `contextWindowMessages` | 20 | Messages kept in active context |
+| `maxMemoriesPerPersona` | 50 | Max stored memories per persona |
+| `maxInjectedMemories` | 3 | Memories injected per request |
+| `memoryTokenBudget` | 1000 | Token budget for memory injection |
+
+## Persona Templates
+
+6 built-in templates to get started:
+- **Helpful Assistant** - General-purpose AI helper
+- **Creative Writer** - Content creation specialist
+- **Code Mentor** - Programming tutor
+- **Support Agent** - Customer service representative
+- **Professional Coach** - Career and productivity advisor
+- **Social Media Manager** - Content strategist
+
+## API Routes
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/chat` | POST | Stream LLM responses |
+| `/api/memory/summarize` | POST | Generate conversation summaries |
+| `/api/tts` | POST | Generate speech audio |
+| `/api/voices` | GET | List available voices |
+| `/api/voices/clone` | POST | Clone a voice |
+
+## Development
+
+```bash
+# Run development server
+pnpm dev
+
+# Type check
+pnpm type-check
+
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+## License
+
+MIT
