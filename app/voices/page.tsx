@@ -93,7 +93,7 @@ export default function VoicesPage() {
             <Wand2 className="h-4 w-4 mr-2" />
             {showGuide ? 'Hide Guide' : 'Cloning Guide'}
           </Button>
-          <Button onClick={() => setCloneDialogOpen(true)} disabled={!isConfigured}>
+          <Button onClick={() => setCloneDialogOpen(true)}>
             <Upload className="h-4 w-4 mr-2" />
             Clone Voice
           </Button>
