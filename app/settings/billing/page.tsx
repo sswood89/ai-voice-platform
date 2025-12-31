@@ -151,8 +151,9 @@ export default function BillingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
+      <div className="min-h-screen flex items-center justify-center" role="status" aria-live="polite">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-500" aria-hidden="true" />
+        <span className="sr-only">Loading billing information...</span>
       </div>
     );
   }
@@ -167,16 +168,24 @@ export default function BillingPage() {
 
         {/* Success/Cancel Messages */}
         {success && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
-            <Check className="h-5 w-5 text-green-500" />
-            <p className="text-green-800">Your subscription has been activated successfully!</p>
+          <div
+            role="alert"
+            aria-live="polite"
+            className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3"
+          >
+            <Check className="h-5 w-5 text-green-600" aria-hidden="true" />
+            <p className="text-green-800 font-medium">Your subscription has been activated successfully!</p>
           </div>
         )}
 
         {canceled && (
-          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 text-amber-500" />
-            <p className="text-amber-800">Checkout was canceled. No charges were made.</p>
+          <div
+            role="alert"
+            aria-live="polite"
+            className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3"
+          >
+            <AlertCircle className="h-5 w-5 text-amber-600" aria-hidden="true" />
+            <p className="text-amber-800 font-medium">Checkout was canceled. No charges were made.</p>
           </div>
         )}
 
@@ -196,12 +205,13 @@ export default function BillingPage() {
               <button
                 onClick={handleManageSubscription}
                 disabled={portalLoading}
-                className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
+                aria-busy={portalLoading}
+                className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 {portalLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                 ) : (
-                  <ExternalLink className="h-4 w-4" />
+                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
                 )}
                 Manage Subscription
               </button>
@@ -210,34 +220,37 @@ export default function BillingPage() {
 
           {/* Usage Summary */}
           {usage && (
-            <div className="mt-6 pt-6 border-t grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">Messages This Month</p>
-                <p className="text-xl font-semibold">
+            <section className="mt-6 pt-6 border-t" aria-labelledby="usage-summary-heading">
+              <h3 id="usage-summary-heading" className="sr-only">Usage Summary</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                  <p className="text-sm text-gray-600" id="messages-label">Messages This Month</p>
+                <p className="text-xl font-semibold" aria-labelledby="messages-label">
                   {usage.limits.messages.unlimited
                     ? 'Unlimited'
                     : `${usage.limits.messages.current} / ${usage.limits.messages.limit}`}
                 </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600" id="personas-label">Personas</p>
+                  <p className="text-xl font-semibold" aria-labelledby="personas-label">
+                    {usage.limits.personas.unlimited ? 'Unlimited' : usage.limits.personas.limit}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600" id="voice-label">Voice</p>
+                  <p className="text-xl font-semibold" aria-labelledby="voice-label">
+                    {usage.limits.voice.enabled ? 'Enabled' : 'Disabled'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600" id="embeds-label">Widget Embeds</p>
+                  <p className="text-xl font-semibold" aria-labelledby="embeds-label">
+                    {usage.limits.embeds.unlimited ? 'Unlimited' : usage.limits.embeds.limit}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-gray-500">Personas</p>
-                <p className="text-xl font-semibold">
-                  {usage.limits.personas.unlimited ? 'Unlimited' : usage.limits.personas.limit}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Voice</p>
-                <p className="text-xl font-semibold">
-                  {usage.limits.voice.enabled ? 'Enabled' : 'Disabled'}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Widget Embeds</p>
-                <p className="text-xl font-semibold">
-                  {usage.limits.embeds.unlimited ? 'Unlimited' : usage.limits.embeds.limit}
-                </p>
-              </div>
-            </div>
+            </section>
           )}
         </div>
 
@@ -263,10 +276,10 @@ export default function BillingPage() {
                 {tier.price > 0 && <span className="text-gray-500">/month</span>}
               </div>
 
-              <ul className="space-y-3 mb-6">
+              <ul className="space-y-3 mb-6" aria-label={`${tier.name} plan features`}>
                 {tier.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                    <Check className="h-5 w-5 text-green-500 shrink-0 mt-0.5" aria-hidden="true" />
                     <span className="text-sm text-gray-600">{feature}</span>
                   </li>
                 ))}
@@ -275,7 +288,8 @@ export default function BillingPage() {
               {currentTier === tier.id ? (
                 <button
                   disabled
-                  className="w-full py-2 px-4 bg-gray-100 text-gray-500 rounded-lg font-medium"
+                  aria-disabled="true"
+                  className="w-full py-2 px-4 bg-gray-100 text-gray-600 rounded-lg font-medium"
                 >
                   Current Plan
                 </button>
@@ -284,7 +298,8 @@ export default function BillingPage() {
                   <button
                     onClick={handleManageSubscription}
                     disabled={portalLoading}
-                    className="w-full py-2 px-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition disabled:opacity-50"
+                    aria-busy={portalLoading}
+                    className="w-full py-2 px-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     {portalLoading ? 'Loading...' : 'Downgrade'}
                   </button>
@@ -293,15 +308,17 @@ export default function BillingPage() {
                 <button
                   onClick={() => handleCheckout(tier.id)}
                   disabled={checkoutLoading !== null}
-                  className={`w-full py-2 px-4 rounded-lg font-medium transition disabled:opacity-50 ${
+                  aria-busy={checkoutLoading === tier.id}
+                  aria-label={`${currentTier === 'free' ? 'Get started with' : 'Upgrade to'} ${tier.name} plan at $${tier.price} per month`}
+                  className={`w-full py-2 px-4 rounded-lg font-medium transition disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     tier.popular
-                      ? 'bg-indigo-500 text-white hover:bg-indigo-600'
-                      : 'bg-gray-900 text-white hover:bg-gray-800'
+                      ? 'bg-indigo-500 text-white hover:bg-indigo-600 focus:ring-indigo-500'
+                      : 'bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-900'
                   }`}
                 >
                   {checkoutLoading === tier.id ? (
                     <span className="flex items-center justify-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                       Loading...
                     </span>
                   ) : currentTier === 'free' ? (
@@ -316,7 +333,7 @@ export default function BillingPage() {
         </div>
 
         {/* FAQ or Help */}
-        <div className="mt-12 text-center text-gray-500 text-sm">
+        <div className="mt-12 text-center text-gray-600 text-sm">
           <p>
             Questions about billing?{' '}
             <a href="mailto:support@example.com" className="text-indigo-500 hover:underline">

@@ -49,17 +49,17 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="p-2 space-y-1">
+      <nav className="p-2 space-y-1" aria-label="Main navigation">
         {navigation.map((item) => {
           const isActive = pathname === item.href ||
             (item.href !== '/' && pathname.startsWith(item.href));
           return (
-            <Link key={item.name} href={item.href}>
+            <Link key={item.name} href={item.href} aria-current={isActive ? 'page' : undefined}>
               <Button
                 variant={isActive ? 'secondary' : 'ghost'}
                 className={clsx('w-full justify-start', isActive && 'bg-secondary')}
               >
-                <item.icon className="h-4 w-4 mr-2" />
+                <item.icon className="h-4 w-4 mr-2" aria-hidden="true" />
                 {item.name}
               </Button>
             </Link>
@@ -71,53 +71,68 @@ export function Sidebar() {
       {pathname === '/chat' && (
         <>
           <div className="px-4 py-2 border-t border-b flex items-center justify-between">
-            <span className="text-sm font-medium">Conversations</span>
+            <span className="text-sm font-medium" id="conversations-heading">Conversations</span>
             <Button
               size="icon"
               variant="ghost"
               className="h-6 w-6"
+              aria-label="Create new conversation"
               onClick={() => createConversation()}
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
 
           <ScrollArea className="flex-1">
-            <div className="p-2 space-y-1">
-              {conversations.map((conversation) => (
-                <div
-                  key={conversation.id}
-                  className={clsx(
-                    'group flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer',
-                    'hover:bg-accent transition-colors',
-                    activeConversationId === conversation.id && 'bg-accent'
-                  )}
-                  onClick={() => setActiveConversation(conversation.id)}
-                >
-                  <MessageSquare className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  <span className="text-sm truncate flex-1">
-                    {conversation.title || 'New Conversation'}
-                  </span>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-6 w-6 opacity-0 group-hover:opacity-100"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteConversation(conversation.id);
+            <ul className="p-2 space-y-1" role="listbox" aria-labelledby="conversations-heading">
+              {conversations.map((conversation) => {
+                const title = conversation.title || 'New Conversation';
+                const isActive = activeConversationId === conversation.id;
+                return (
+                  <li
+                    key={conversation.id}
+                    role="option"
+                    aria-selected={isActive}
+                    tabIndex={0}
+                    className={clsx(
+                      'group flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer',
+                      'hover:bg-accent focus:bg-accent focus:outline-none focus:ring-2 focus:ring-ring transition-colors',
+                      isActive && 'bg-accent'
+                    )}
+                    onClick={() => setActiveConversation(conversation.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActiveConversation(conversation.id);
+                      }
                     }}
                   >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </div>
-              ))}
+                    <MessageSquare className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                    <span className="text-sm truncate flex-1">
+                      {title}
+                    </span>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-6 w-6 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100"
+                      aria-label={`Delete conversation: ${title}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteConversation(conversation.id);
+                      }}
+                    >
+                      <Trash2 className="h-3 w-3" aria-hidden="true" />
+                    </Button>
+                  </li>
+                );
+              })}
 
               {conversations.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-4">
+                <li className="text-sm text-muted-foreground text-center py-4" role="status">
                   No conversations yet
-                </p>
+                </li>
               )}
-            </div>
+            </ul>
           </ScrollArea>
         </>
       )}
