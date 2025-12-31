@@ -112,6 +112,22 @@ export interface Embed {
   updated_at: string;
 }
 
+export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing' | 'inactive' | 'incomplete' | 'incomplete_expired' | 'unpaid';
+
+export interface Subscription {
+  id: string;
+  user_id: string;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+  stripe_price_id: string | null;
+  status: SubscriptionStatus;
+  current_period_start: string | null;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 // Tier limits for usage tracking
 export const TIER_LIMITS = {
   free: {
