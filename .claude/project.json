@@ -1,0 +1,108 @@
+{
+  "id": "llm-playground",
+  "name": "AI Voice Platform",
+  "description": "Embeddable persona platform - custom AI chatbots with voice, memory, and multi-provider LLM support",
+  "version": "0.4.0",
+  "status": "in-progress",
+  "priority": "high",
+  "category": "product",
+  "tags": ["llm", "chat", "personas", "memory", "voice", "widget", "saas", "supabase", "embed"],
+  "pipeline": {
+    "stage": "development",
+    "progress": 70,
+    "phases": {
+      "planning": "done",
+      "design": "done",
+      "development": "in-progress",
+      "testing": "pending",
+      "deployment": "pending"
+    }
+  },
+  "goals": [
+    "Multi-provider LLM support (Anthropic, OpenAI, Ollama)",
+    "Persona system with templates and full customization",
+    "Long-term memory with auto-summarization",
+    "Voice integration with ElevenLabs + cloning",
+    "Embeddable widget for websites",
+    "API service for developers",
+    "Twitter/social media bot integration"
+  ],
+  "milestones": [
+    {
+      "name": "Core Chat System",
+      "status": "done",
+      "completedAt": "2025-12-18"
+    },
+    {
+      "name": "Persona System",
+      "status": "done",
+      "completedAt": "2025-12-18"
+    },
+    {
+      "name": "Long-Term Memory",
+      "status": "done",
+      "completedAt": "2025-12-30"
+    },
+    {
+      "name": "Vercel Deployment",
+      "status": "done",
+      "completedAt": "2025-12-30"
+    },
+    {
+      "name": "Phase 1: Quick Polish",
+      "status": "done",
+      "completedAt": "2025-12-30",
+      "details": "Voice cloning UI, usage tracking, memory panel"
+    },
+    {
+      "name": "Phase 2: Foundation (Auth + DB)",
+      "status": "done",
+      "completedAt": "2025-12-31",
+      "details": "Supabase auth, database schema, usage tracking, login/signup pages"
+    },
+    {
+      "name": "Phase 3: Embeddable Widget",
+      "status": "done",
+      "completedAt": "2025-12-31",
+      "details": "Widget loader, iframe chat app, embed dashboard, origin validation, rate limiting"
+    },
+    {
+      "name": "Phase 3.1: Demo & Testing",
+      "status": "done",
+      "completedAt": "2025-12-31",
+      "details": "Demo widget (no Supabase), test-widget page, iframe focus management with postMessage"
+    },
+    {
+      "name": "Phase 4: Billing + Social",
+      "status": "pending"
+    }
+  ],
+  "currentFocus": "Phase 4: Stripe billing integration and Twitter/social bot support",
+  "blockers": [],
+  "notes": "Phase 3 complete with demo/testing infrastructure! Widget system tested with /widget/demo (Ollama-powered, no Supabase needed) and /test-widget (simulates external embedding). Focus fix implemented using postMessage API for iframe communication. Next: Phase 4 - Stripe billing and Twitter/social bot integration.",
+  "links": {
+    "repo": "https://github.com/sswood89/ai-voice-platform",
+    "docs": "",
+    "deployment": "https://ai-voice-platform-seven.vercel.app",
+    "figma": ""
+  },
+  "tech": {
+    "stack": [
+      "Next.js 16",
+      "React 19",
+      "TypeScript 5",
+      "Tailwind CSS 4",
+      "Zustand",
+      "Supabase",
+      "Anthropic SDK",
+      "OpenAI SDK",
+      "Ollama",
+      "ElevenLabs"
+    ],
+    "ports": [3006],
+    "dependencies": ["@supabase/ssr", "@supabase/supabase-js"],
+    "planned": ["Stripe", "Redis", "Twitter API"]
+  },
+  "createdAt": "2025-12-31T03:33:01Z",
+  "updatedAt": "2025-12-31T18:30:00Z"
+}

@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": ".*",
+        "command": "echo '\\n[Project Tracker] Session ending. Consider running /session-end to log progress.\\n'"
+      }
+    ]
+  }
+}
