@@ -144,7 +144,8 @@ export default function WidgetPage() {
       setError(err instanceof Error ? err.message : 'Failed to send message');
     } finally {
       setIsLoading(false);
-      inputRef.current?.focus();
+      // Refocus input after response
+      setTimeout(() => inputRef.current?.focus(), 0);
     }
   };
 
