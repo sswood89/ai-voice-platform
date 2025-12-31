@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { getSubscription } from '@/lib/stripe/subscription';
 
 export async function GET() {
   try {
+    // Return null subscription if Supabase isn't configured
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      return NextResponse.json({ subscription: null });
+    }
+
+    const { createClient } = await import('@/lib/supabase/server');
+    const { getSubscription } = await import('@/lib/stripe/subscription');
+
     const supabase = await createClient();
 
     const { data: { user }, error: authError } = await supabase.auth.getUser();

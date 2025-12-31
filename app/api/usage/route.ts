@@ -1,6 +1,4 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { getUsageSummary, checkTierLimit } from '@/lib/usage/track';
 import { TIER_LIMITS } from '@/lib/supabase/types';
 
 /**
@@ -9,6 +7,26 @@ import { TIER_LIMITS } from '@/lib/supabase/types';
  */
 export async function GET() {
   try {
+    // Return demo data if Supabase isn't configured
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      const tier = 'free';
+      const tierLimits = TIER_LIMITS[tier];
+      return NextResponse.json({
+        tier,
+        usage: { llm_tokens: 0, tts_characters: 0, voice_clones: 0 },
+        limits: {
+          messages: { current: 0, limit: tierLimits.messages_per_month, unlimited: false },
+          personas: { limit: tierLimits.personas, unlimited: false },
+          voice: { enabled: tierLimits.voice_enabled, clones: { current: 0, limit: 5 }, ttsCharacters: 0 },
+          embeds: { limit: tierLimits.embeds, unlimited: false },
+          api: { enabled: tierLimits.api_access },
+        },
+      });
+    }
+
+    const { createClient } = await import('@/lib/supabase/server');
+    const { getUsageSummary, checkTierLimit } = await import('@/lib/usage/track');
+
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 

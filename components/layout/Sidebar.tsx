@@ -15,6 +15,7 @@ import {
   Plus,
   Trash2,
   LayoutDashboard,
+  CreditCard,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -26,6 +27,7 @@ const navigation = [
   { name: 'Chat', href: '/chat', icon: MessageSquare },
   { name: 'Personas', href: '/personas', icon: Users },
   { name: 'Voices', href: '/voices', icon: Mic },
+  { name: 'Billing', href: '/settings/billing', icon: CreditCard },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
@@ -49,7 +51,8 @@ export function Sidebar() {
       {/* Navigation */}
       <nav className="p-2 space-y-1">
         {navigation.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = pathname === item.href ||
+            (item.href !== '/' && pathname.startsWith(item.href));
           return (
             <Link key={item.name} href={item.href}>
               <Button

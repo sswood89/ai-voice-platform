@@ -9,7 +9,7 @@
   "tags": ["llm", "chat", "personas", "memory", "voice", "widget", "saas", "supabase", "embed"],
   "pipeline": {
     "stage": "development",
-    "progress": 70,
+    "progress": 80,
     "phases": {
       "planning": "done",
       "design": "done",
@@ -73,13 +73,19 @@
       "details": "Demo widget (no Supabase), test-widget page, iframe focus management with postMessage"
     },
     {
-      "name": "Phase 4: Billing + Social",
+      "name": "Phase 4: Stripe Billing",
+      "status": "done",
+      "completedAt": "2025-12-31",
+      "details": "Stripe SDK, checkout flow, webhooks, billing portal, subscriptions table, billing UI with pricing cards"
+    },
+    {
+      "name": "Phase 5: Twitter/Social Integration",
       "status": "pending"
     }
   ],
-  "currentFocus": "Phase 4: Stripe billing integration and Twitter/social bot support",
+  "currentFocus": "Phase 5: Twitter/social bot integration",
   "blockers": [],
-  "notes": "Phase 3 complete with demo/testing infrastructure! Widget system tested with /widget/demo (Ollama-powered, no Supabase needed) and /test-widget (simulates external embedding). Focus fix implemented using postMessage API for iframe communication. Next: Phase 4 - Stripe billing and Twitter/social bot integration.",
+  "notes": "Phase 4 Stripe billing complete! Full subscription system with checkout, webhooks, customer portal, and billing UI. Tiers: Free ($0, 100 msg/mo), Pro ($19/mo, unlimited), Business ($49/mo, unlimited + API). Next: Phase 5 - Twitter/social bot integration.",
   "links": {
     "repo": "https://github.com/sswood89/ai-voice-platform",
     "docs": "",
@@ -100,9 +106,9 @@
       "ElevenLabs"
     ],
     "ports": [3006],
-    "dependencies": ["@supabase/ssr", "@supabase/supabase-js"],
-    "planned": ["Stripe", "Redis", "Twitter API"]
+    "dependencies": ["@supabase/ssr", "@supabase/supabase-js", "stripe"],
+    "planned": ["Redis", "Twitter API"]
   },
   "createdAt": "2025-12-31T03:33:01Z",
-  "updatedAt": "2025-12-31T18:30:00Z"
+  "updatedAt": "2025-12-31T19:45:00Z"
 }
