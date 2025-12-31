@@ -5,15 +5,23 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const apiKey = process.env.ELEVENLABS_API_KEY;
 
+    // Return demo subscription data if ElevenLabs isn't configured
     if (!apiKey) {
-      return NextResponse.json(
-        { error: 'ElevenLabs API key not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({
+        characterCount: 0,
+        characterLimit: 0,
+        voiceCount: 0,
+        voiceLimit: 0,
+        canClone: false,
+        tier: 'free',
+        nextResetDate: null,
+        configured: false,
+        message: 'ElevenLabs API key not configured. Add ELEVENLABS_API_KEY to enable voice features.'
+      });
     }
 
     const response = await fetch('https://api.elevenlabs.io/v1/user/subscription', {
@@ -42,6 +50,7 @@ export async function GET(request: NextRequest) {
       nextResetDate: data.next_character_count_reset_unix
         ? new Date(data.next_character_count_reset_unix * 1000).toISOString()
         : null,
+      configured: true,
     });
   } catch (error) {
     console.error('Subscription API error:', error);
