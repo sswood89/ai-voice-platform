@@ -9,7 +9,7 @@
   "tags": ["llm", "chat", "personas", "memory", "voice", "widget", "saas", "supabase", "embed"],
   "pipeline": {
     "stage": "development",
-    "progress": 80,
+    "progress": 85,
     "phases": {
       "planning": "done",
       "design": "done",
@@ -79,13 +79,25 @@
       "details": "Stripe SDK, checkout flow, webhooks, billing portal, subscriptions table, billing UI with pricing cards"
     },
     {
+      "name": "Phase 4.1: Voice Cloning UX",
+      "status": "done",
+      "completedAt": "2025-12-31",
+      "details": "Unconfigured state UI, voice cloning guide, sample scripts, in-browser audio recorder, recording tab in clone dialog, post-clone persona prompt, voice selection in persona editor"
+    },
+    {
+      "name": "Phase 4.2: Accessibility (WCAG 2.1 AA)",
+      "status": "done",
+      "completedAt": "2025-12-31",
+      "details": "ARIA labels, keyboard navigation, color contrast fixes, semantic HTML, screen reader support"
+    },
+    {
       "name": "Phase 5: Twitter/Social Integration",
       "status": "pending"
     }
   ],
   "currentFocus": "Phase 5: Twitter/social bot integration",
   "blockers": [],
-  "notes": "Phase 4 Stripe billing complete! Full subscription system with checkout, webhooks, customer portal, and billing UI. Tiers: Free ($0, 100 msg/mo), Pro ($19/mo, unlimited), Business ($49/mo, unlimited + API). Next: Phase 5 - Twitter/social bot integration.",
+  "notes": "Voice Cloning UX complete! Added unconfigured state UI, educational guide, sample scripts, in-browser audio recorder with waveform visualization, and post-clone persona creation flow. Also completed WCAG 2.1 AA accessibility improvements. Next: Phase 5 - Twitter/social bot integration.",
   "links": {
     "repo": "https://github.com/sswood89/ai-voice-platform",
     "docs": "",
@@ -110,5 +122,5 @@
     "planned": ["Redis", "Twitter API"]
   },
   "createdAt": "2025-12-31T03:33:01Z",
-  "updatedAt": "2025-12-31T19:45:00Z"
+  "updatedAt": "2025-12-31T23:30:00Z"
 }
