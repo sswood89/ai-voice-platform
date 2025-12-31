@@ -22,3 +22,12 @@ export {
   validateCloneAudio,
   getCloneGuidelines,
 } from './voice-cloning';
+
+export {
+  CLONE_SCRIPTS,
+  getCloneScripts,
+  getCloneScript,
+  getScriptsByCategory,
+  getRecommendedScript,
+  type CloneScript,
+} from './clone-scripts';

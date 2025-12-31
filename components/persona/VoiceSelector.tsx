@@ -6,7 +6,8 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Play, Square, Volume2, Loader2 } from 'lucide-react';
+import { Play, Square, Volume2, Loader2, Plus } from 'lucide-react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -83,10 +84,20 @@ export function VoiceSelector({ voiceConfig, onChange }: VoiceSelectorProps) {
       {/* Voice Selection */}
       <Card>
         <CardHeader>
-          <CardTitle>Select Voice</CardTitle>
-          <CardDescription>
-            Choose a voice for your persona. Click to select, use the play button to preview.
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Select Voice</CardTitle>
+              <CardDescription>
+                Choose a voice for your persona. Click to select, use the play button to preview.
+              </CardDescription>
+            </div>
+            <Link href="/voices">
+              <Button variant="outline" size="sm">
+                <Plus className="h-4 w-4 mr-1" />
+                Clone Voice
+              </Button>
+            </Link>
+          </div>
         </CardHeader>
         <CardContent>
           {isLoadingVoices ? (
