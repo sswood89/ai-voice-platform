@@ -11,11 +11,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useVoiceStore, useSettingsStore } from '@/stores';
+import { VoiceCloneDialog } from '@/components/voices/VoiceCloneDialog';
 import { toast } from 'sonner';
 import type { Voice } from '@/types';
 
 export default function VoicesPage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [cloneDialogOpen, setCloneDialogOpen] = useState(false);
   const {
     voices,
     clonedVoices,
@@ -27,23 +29,27 @@ export default function VoicesPage() {
 
   const allVoices = [...voices, ...clonedVoices];
 
-  useEffect(() => {
-    async function fetchVoices() {
-      try {
-        const response = await fetch('/api/voices');
-        if (response.ok) {
-          const data = await response.json();
-          setVoices(data.voices);
-        }
-      } catch (error) {
-        console.error('Failed to fetch voices:', error);
-      } finally {
-        setIsLoading(false);
+  const fetchVoices = async () => {
+    try {
+      const response = await fetch('/api/voices');
+      if (response.ok) {
+        const data = await response.json();
+        setVoices(data.voices);
       }
+    } catch (error) {
+      console.error('Failed to fetch voices:', error);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
+  useEffect(() => {
     fetchVoices();
   }, [setVoices]);
+
+  const handleCloneSuccess = () => {
+    fetchVoices();
+  };
 
   const handlePlayPreview = (voice: Voice) => {
     if (currentlyPlaying === voice.id) {
@@ -70,11 +76,17 @@ export default function VoicesPage() {
             Browse available voices and clone your own
           </p>
         </div>
-        <Button>
+        <Button onClick={() => setCloneDialogOpen(true)}>
           <Upload className="h-4 w-4 mr-2" />
           Clone Voice
         </Button>
       </div>
+
+      <VoiceCloneDialog
+        open={cloneDialogOpen}
+        onOpenChange={setCloneDialogOpen}
+        onSuccess={handleCloneSuccess}
+      />
 
       <Tabs defaultValue="all">
         <TabsList>
@@ -137,7 +149,7 @@ export default function VoicesPage() {
               <p className="text-muted-foreground mb-4">
                 No cloned voices yet. Upload audio samples to create your own voice.
               </p>
-              <Button>
+              <Button onClick={() => setCloneDialogOpen(true)}>
                 <Upload className="h-4 w-4 mr-2" />
                 Clone Your First Voice
               </Button>

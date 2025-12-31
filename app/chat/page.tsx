@@ -5,7 +5,7 @@
  * Main chat interface with persona selection
  */
 
-import { ChatInterface } from '@/components/chat';
+import { ChatInterface, MemoryPanel } from '@/components/chat';
 import { usePersonaStore } from '@/stores';
 import {
   Select,
@@ -46,11 +46,14 @@ export default function ChatPage() {
           </Select>
         </div>
 
-        {activePersona && (
-          <p className="text-sm text-muted-foreground">
-            {activePersona.personality.traits.slice(0, 3).join(' • ')}
-          </p>
-        )}
+        <div className="flex items-center gap-4">
+          {activePersona && (
+            <p className="text-sm text-muted-foreground hidden sm:block">
+              {activePersona.personality.traits.slice(0, 3).join(' • ')}
+            </p>
+          )}
+          <MemoryPanel personaId={activePersonaId ?? undefined} />
+        </div>
       </div>
 
       {/* Chat Interface */}

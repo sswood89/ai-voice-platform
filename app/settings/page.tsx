@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useSettingsStore } from '@/stores';
+import { ElevenLabsUsage } from '@/components/settings/ElevenLabsUsage';
 import { ANTHROPIC_MODELS, OPENAI_MODELS, OLLAMA_MODELS } from '@/types';
 import { toast } from 'sonner';
 
@@ -254,6 +255,10 @@ export default function SettingsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <ElevenLabsUsage />
+
+          <Separator />
+
           <div className="flex items-center justify-between">
             <div>
               <Label>Enable Voice</Label>
